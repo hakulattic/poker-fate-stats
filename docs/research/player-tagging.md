@@ -2,11 +2,11 @@
 
 This page records the player classification model used by the stats site. Treat these tags as heuristic labels, not objective judgments.
 
-The site shows two tag tracks. Algorithmic tags are computed from official profile stats in `web/src/features/player-stats/tagging.ts` and always reflect the latest snapshot. Community tags are crowd-sourced reads that the official stats cannot express; they are voted by visitors, stored in D1, and surfaced only once enough distinct voters agree. The two tracks never share a label, so a computed style is never confused with a community opinion. See [Community Tags](#community-tags) for that track.
+The site shows two tag tracks. Algorithmic tags are computed from official profile stats in `web/src/features/player-stats/tagging.ts` and always reflect the latest snapshot. Community tags are crowd-sourced reads that the official stats cannot express. Visitors voted on those tags, and a label appeared only after enough distinct voters agreed. Votes were stored in D1. The two tracks never share a label, so a computed style is never confused with a community opinion. See [Community Tags](#community-tags) for that track.
 
 ## Current Model
 
-The tagging model and the public stats website cover Hold'em lobby only. The collector still fetches every confirmed `/player/gameData` profile game type so the official API contract stays documented in [API Inventory](api-inventory.md), but Omaha, SNG Hold'em, and friend-room Hold'em are not selectable in the UI and are not classified. See [Excluded Game Modes](#excluded-game-modes) for the reasons.
+The tagging model and the public stats website cover Hold'em lobby only. The collector fetched every confirmed `/player/gameData` profile game type documented in [API Inventory](api-inventory.md), but Omaha, SNG Hold'em, and friend-room Hold'em were excluded from the UI and its tag model. See [Excluded Game Modes](#excluded-game-modes) for the reasons.
 
 Each sampled Hold'em player receives one primary preflop tag and one primary postflop tag. If the player has fewer than `500` Hold'em hands, the UI shows only `Sample too low`. Players above the hand threshold can also receive additive overlay chips for narrow signals that do not replace the primary taxonomy.
 
@@ -117,7 +117,7 @@ Preset community tags:
 | `Bluff-heavy`   | 喜欢偷鸡     | Bets and raises as bluffs more than the board justifies.        |
 | `Tilts easily`  | 容易上头     | Decisions degrade after losses or bad beats.                    |
 | `Hero caller`   | 喜欢抓诈唬   | Makes thin bluff-catching calls against big bets.               |
-| `Slow-roller`   | 经常慢摊牌   | Stalls before showing the winning hand; poor etiquette.         |
+| `Slow-roller`   | 经常慢摊牌   | Delays showing a winning hand, a breach of etiquette.           |
 | `Limper`        | 喜欢平跟     | Enters pots by calling the big blind instead of raising.        |
 | `Overfolds`     | 过度弃牌     | Folds too often to aggression.                                  |
 | `Overplays`     | 高估牌力     | Overvalues one pair or medium-strength hands and rarely folds.  |
@@ -145,7 +145,7 @@ The Worker exposes `GET /api/players/:uid/tags` (all presets with current counts
 
 ## Excluded Game Modes
 
-The collector fetches every confirmed profile game type, but the current public model classifies only Hold'em lobby (`10010101`). Other modes have real data in the current sample; they are excluded because they need separate baselines and, for SNG, different outcome metrics.
+The collector fetches every confirmed profile game type, but the current public model classifies only Hold'em lobby (`10010101`). The sample includes other modes, but those modes need separate baselines. SNG also needs different outcome metrics.
 
 The 2026-06-23 bounded run enriched `40` leaderboard-discovered players:
 

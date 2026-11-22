@@ -39,7 +39,7 @@ Response fields observed in `list` rows:
 | `skin_id`   | Character skin ID used by leaderboard presentation.              |
 | `like`      | Leaderboard likes for the row.                                   |
 
-The response also includes `total` and `self`. `total` can report thousands of ranked users, but live probes on 2026-06-12 showed that pagination is effectively capped at the top 100 rows. `skip = 0` and `skip = 50` returned rows; `skip = 100` returned an empty page with `total = 0`. Requesting `size = 200` also returned an empty page. This matches the decoded client cap `weekly_num = 100`.
+The response also includes `total` and `self`. `total` can report thousands of ranked users, but live probes on 2026-06-12 showed that pagination is effectively capped at the top 100 rows. `skip = 0` and `skip = 50` returned rows. At `skip = 100`, the API returned an empty page with `total = 0`. Requesting `size = 200` also returned an empty page. This matches the decoded client cap `weekly_num = 100`.
 
 ## Leaderboard IDs
 
@@ -78,7 +78,7 @@ There is no confirmed all-player listing endpoint. The current high-confidence d
 | ------------------------------ | ---------------------------- | ---------------------------------------------------------------------------------------------------- |
 | `POST /friend/searchList`      | Confirmed for known targets  | Resolves known nicknames or UIDs, such as `Hakula` / `10410931`, but does not provide enumeration.   |
 | `POST /activity/rankingList`   | Confirmed and currently used | Discovers leaderboard-visible UIDs, capped at the client-visible top 100 rows per leaderboard week.  |
-| Tournament WebSocket rank data | Decoded client lead          | `TourRankItem` contains `UserBrief`, which includes `uid`; this may expose SNG / MTT entrant ranks.  |
+| Tournament WebSocket rank data | Decoded client lead          | `TourRankItem` contains `UserBrief`, which includes `uid`. It may reveal SNG / MTT entrant ranks.    |
 | Account social lists           | Confirmed account-scoped     | Friend, blocked, and friend-game lists are tied to the research account and empty for a fresh guest. |
 | Card history / replay lists    | Confirmed account-scoped     | Recent and collected card lists are tied to the research account and empty for a fresh guest.        |
 
@@ -90,7 +90,7 @@ The most promising expansion path is the tournament WebSocket API. The decoded p
 
 Use `uv --project python run poker-fate players` from the repository root to create reproducible local JSONL snapshots under ignored `data/player-snapshots/`. The collector requires `POKER_FATE_RESEARCH_DEVICE_TOKEN` from an ignored local environment file and does not write guest authorization, `rdkey`, or raw login responses to output.
 
-Guest logins have been rejected with `-5` since 2026-09-03, preventing live runs from completing today. The endpoint contract below remains unchanged; see [login rejection and recovery](api-inventory.md#login-rejection-and-recovery).
+Guest login returned `-5` on 2026-09-03 and collection stopped. See [login rejection and recovery](api-inventory.md#login-rejection-and-recovery).
 
 ```bash
 set -a

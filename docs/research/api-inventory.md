@@ -127,7 +127,7 @@ Profile game types:
 | SNG Hold'em         | `SNG_HOLDEM_GAME`    | `10050301` |
 | Friend-room Hold'em | `FRIEND_HOLDEM_GAME` | `20010103` |
 
-All four game types are observed official API surfaces. The collector currently fetches profile stats for each of them and stores them in D1, but the public website surfaces Texas Hold'em (`10010101`) only. See [Player Tagging](player-tagging.md) for why Omaha and SNG are not surfaced today.
+All four game types are observed official API surfaces. The collector fetched profile stats for each of them for storage in D1. The website displayed Texas Hold'em (`10010101`) only. See [Player Tagging](player-tagging.md) for why Omaha and SNG were excluded.
 
 Response fields used by the profile UI:
 
@@ -176,7 +176,7 @@ Fetched on 2026-06-12 for UID `10410931` with a dedicated guest account:
 | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `POST /player/sngRecord`             | SNG trend data for a target UID.                                                                                                                           |
 | WebSocket `pb.GetOtherDetailInfoREQ` | Profile detail by UID, including brief profile, bio, achievements, collections, and certification metadata.                                                |
-| `POST /activity/rankingList`         | Authenticated leaderboard pages; useful for discovering public UIDs before enriching them with profile stats. See [Player Discovery](player-discovery.md). |
+| `POST /activity/rankingList`         | Authenticated leaderboard pages provide public UIDs for profile lookup. See [Player Discovery](player-discovery.md).                                       |
 | WebSocket tournament rank requests   | Decoded lead for discovering tournament player UIDs from rank lists. Needs live verification before collector use.                                         |
 
 ## Error Codes
@@ -196,7 +196,7 @@ Because request bodies and upstream error text carry the device token and sessio
 
 ### Observed Failures
 
-The [2026-09-02 scheduled run](https://github.com/hakula139/poker-fate-research/actions/runs/33679466642) resumed guest UID `10629834` and collected `485` players. The [September 3 run](https://github.com/hakula139/poker-fate-research/actions/runs/33802352990) and [September 4 run](https://github.com/hakula139/poker-fate-research/actions/runs/33915202256) failed at `/login` with `-5`, before collection or D1 writes, on the same commit. GitHub reports the device-token secret's last update as 2026-06-18.
+The [2026-09-02 scheduled run](https://github.com/hakulattic/poker-fate-stats/actions/runs/33679466642) resumed guest UID `10629834` and collected `485` players. The [September 3 run](https://github.com/hakulattic/poker-fate-stats/actions/runs/33802352990) and [September 4 run](https://github.com/hakulattic/poker-fate-stats/actions/runs/33915202256) failed at `/login` with `-5`, before collection or D1 writes, on the same commit. GitHub reports the device-token secret's last update as 2026-06-18.
 
 Inference: the missing native risk report is a compatibility gap that could explain these rejections, though the evidence does not establish when enforcement changed or whether another risk signal caused them. Because replacing the reusable guest identity does not implement the missing report, do not synthesize risk reports or rotate identities to work around this rejection.
 
@@ -212,8 +212,8 @@ Poker Fate's [official Google Play listing](https://play.google.com/store/apps/d
 
 Recovery is established only after supported login succeeds for the dedicated identity and authenticated leaderboard and profile reads succeed. A subsequent bounded collection and D1 import must also be verified. Static APK analysis and passing local tests do not establish any of those live outcomes.
 
-The device token is now configured only as a GitHub Actions secret, which the collector reads for local or manual runs. Neither Worker reads it, so any leftover Cloudflare secret can be deleted.
+The collector required a device token for guest login. The website read stored D1 rows independently of that credential.
 
 ### Website Behavior
 
-The website no longer authenticates. Its Worker serves stored D1 rows only, with the official-API client paths removed, so no public request reaches `/login`. Any future integration would need a defined request budget and renewal policy before public traffic could trigger logins again.
+The archived website served stored D1 rows. Viewing a player profile did not contact the official API.
