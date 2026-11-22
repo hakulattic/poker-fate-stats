@@ -1,60 +1,9 @@
-# Poker Fate Research
+# Poker Fate Stats
 
-Research workspace, collector, D1 import pipeline, and player stats website for Poker Fate profile data.
+Poker Fate Stats was a searchable archive of Texas Hold'em player profiles from Poker Fate. The site displayed each profile's collection time and used separate tags for preflop and postflop play in six-max Hold'em.
 
-The repo keeps the confirmed API findings, the player collector, D1 schema and import tooling, and the frontend source. Large binaries, decoded client output, raw API responses, local datasets, and credentials stay out of git.
+Collection stopped on 2026-09-03 when guest login began returning device verification error `-5`. The production and preview sites are offline. The [login findings](docs/research/api-inventory.md#login-rejection-and-recovery) document what changed.
 
-## Current Result
-
-This project is no longer maintained. Collection stopped on 2026-09-03, when guest login began returning device-risk verification code `-5`, and the daily collection workflow has been removed. The website serves the stored snapshot as it stands and never contacts the official API. See the [login findings](docs/research/api-inventory.md#guest-login) for the evidence and for why no supported fix was available.
-
-The main output is a D1-backed website for browsing collected Poker Fate player stats. It supports player search, sortable stats, player details, per-player update times, dark mode, and English / Simplified Chinese UI.
-
-The website surface is Texas Hold'em only. Player classification is split into preflop and postflop tags tuned for 6-max Hold'em. The collector still fetches Omaha and SNG profile data from the official API, but those modes are not exposed in the UI; see [`docs/research/player-tagging.md`](docs/research/player-tagging.md) for the reason.
-
-Every player carries the fetch time of its last successful collection. Players with no Texas Hold'em hands stay hidden from the table and from search.
-
-## Project Layout
-
-| Path                       | Purpose                                                     |
-| -------------------------- | ----------------------------------------------------------- |
-| [`python/`](python/)       | Python package for the collector and D1 import CLI          |
-| [`web/`](web/)             | React player stats website                                  |
-| [`docs/`](docs/)           | Research notes, API findings, APK provenance, and tag model |
-| [`artifacts/`](artifacts/) | Ignored local APK / binary downloads with tracked metadata  |
-| `data/`, `work/`           | Ignored local snapshots, API responses, and scratch output  |
-
-## Documentation
-
-See [`docs/`](docs/) for the research index, endpoint contract, and APK evidence.
-
-## Development
-
-`direnv` auto-activates the shell via `.envrc`.
-
-```bash
-nix develop -c zsh                                      # Manual interactive shell
-nix flake check                                         # Run repository validation
-```
-
-The shell includes Android static-analysis tools, text search utilities, uv-managed Python tooling, frontend tooling, Ruff, documentation linters, and pre-commit hooks.
-
-Local leaderboard snapshots can be collected with `uv --project python run poker-fate players`; see [`docs/research/player-discovery.md`](docs/research/player-discovery.md) for credential and output details.
-
-## Player Stats Website
-
-Run the frontend locally:
-
-```bash
-pnpm --dir web install
-pnpm --dir web run dev
-```
-
-The production site reads player data from Cloudflare D1 through the Worker API. The dev server runs at <http://127.0.0.1:5178/>. See [`web/README.md`](web/README.md) for frontend setup, ports, and checks.
-
-## Validation
-
-```bash
-nix flake check
-nix develop --command scripts/check-web.sh
-```
+- [Web app](web/README.md) for local development and tests.
+- [Python tools](python/README.md) for the collector and D1 import from saved snapshots.
+- [Research notes](docs/research/README.md) on player discovery, the tagging model, and the client API.

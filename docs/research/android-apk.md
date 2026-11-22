@@ -77,10 +77,10 @@ The actionable API evidence came from decoded Unity Addressables bundles under t
 
 | Decoded source           | Finding                                                                                                                        |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| `LoginModel.lua`         | Guest login sends `POST /login`; the response stores `authorization` for HTTP and `rdkey` for websocket login.                 |
+| `LoginModel.lua`         | Guest login sends `POST /login`. The response stores `authorization` for HTTP and `rdkey` for websocket login.                 |
 | `FriendModel.lua`        | Nickname / UID search calls `POST /friend/searchList`.                                                                         |
-| `InformationMainNew.lua` | Profile statistics call `POST /player/gameData`; SNG trend data calls `POST /player/sngRecord`.                                |
-| `RankingModel.lua`       | Leaderboard pages call `POST /activity/rankingList`; rows include public UIDs that open the same profile view.                 |
+| `InformationMainNew.lua` | Profile statistics call `POST /player/gameData`. SNG trend data calls `POST /player/sngRecord`.                                |
+| `RankingModel.lua`       | Leaderboard pages call `POST /activity/rankingList`. Rows include public UIDs that open the same profile view.                 |
 | `CSGame.proto`           | `GetOtherDetailInfoREQ` / `GetOtherDetailInfoRSP` define websocket profile detail by UID.                                      |
 | `tpl_HttpCode.lua`       | `-2` is `HTTP_AUTHENTICATION_FAILED`, displayed as login authorization verification failure.                                   |
 | `tpl_mult_language.lua`  | Profile statistics are displayed as VPIP, PFR, 3-Bet, WTSD, AFq, and C-Bet, for the past 30 days and excluding practice modes. |

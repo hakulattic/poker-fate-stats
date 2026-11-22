@@ -1,4 +1,4 @@
-# AGENTS.md / CLAUDE.md: poker-fate-research
+# Poker Fate Stats agent instructions
 
 ## Project Overview
 
@@ -10,16 +10,16 @@ Keep user-facing status in `README.md`. Keep durable evidence, schemas, request 
 
 ```text
 .
-├── artifacts/                             # Local APK / EXE downloads; ignored except README
+├── artifacts/                             # Local APK / EXE downloads (ignored except README)
 ├── docs/                                  # API contract, current findings, and artifact provenance
 │   └── research/                          # Guest auth, player lookup, stats schema, APK evidence
 ├── python/                                # uv-managed collector and website data builder package
 │   └── src/poker_fate_research/           # Python package source
 ├── web/                                   # pnpm-managed stats website
-├── work/                                  # Scratch command output; ignored
-├── data/                                  # Raw API responses and normalized local datasets; ignored
-├── apktool-out/                           # Decoded Android resources; ignored
-└── jadx-out/                              # Java decompiler output; ignored
+├── work/                                  # Scratch command output (ignored)
+├── data/                                  # Raw API responses and normalized local datasets (ignored)
+├── apktool-out/                           # Decoded Android resources (ignored)
+└── jadx-out/                              # Java decompiler output (ignored)
 ```
 
 ## Research Conventions
@@ -61,7 +61,7 @@ Keep user-facing status in `README.md`. Keep durable evidence, schemas, request 
 - Keep raw command outputs in `work/` when they are bulky. Summarize the relevant finding in `docs/`.
 - Keep source URLs beside findings. For downloaded artifacts, include hash and observed HTTP metadata.
 - Do not commit guest `authorization`, `rdkey`, device tokens, raw login responses, or other live credentials.
-- Reuse a stable dedicated guest identity for live probes. Store only the reusable device token in ignored local env files such as `.envrc.local`, using `POKER_FATE_RESEARCH_DEVICE_TOKEN`; do not create throwaway guest accounts when that token is available.
+- Reuse a stable dedicated guest identity for live probes. Store only the reusable device token in ignored local env files such as `.envrc.local`, using `POKER_FATE_RESEARCH_DEVICE_TOKEN`. Do not create throwaway guest accounts when that token is available.
 - Separate observed facts from hypotheses. Use short labels such as `Inference:` when the evidence does not directly prove the conclusion.
 
 ## Nix Development
@@ -73,7 +73,7 @@ nix develop -c zsh                                      # Manual interactive she
 nix flake check                                         # Run repository validation
 ```
 
-Use the dev shell tools instead of requiring global installs. Python collector tooling is uv-managed through `python/pyproject.toml` and `python/uv.lock`; repository validation runs through `nix flake check`. Keep the flake on the current NixOS stable branch unless a tool requires unstable.
+Use the dev shell tools instead of requiring global installs. Python collector tooling is uv-managed through `python/pyproject.toml` and `python/uv.lock`. Validate the repository with `nix flake check`. Keep the flake on the current NixOS stable branch unless a tool requires unstable.
 
 ### Pre-commit Hooks
 
